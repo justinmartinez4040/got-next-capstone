@@ -1,23 +1,42 @@
-# Got Next
+# CrowdCall
 
-A courtside tool for pickup basketball at the school gym: a next-up queue plus a live crowd meter. You can see how full the gym is before you show up, and there's a record of who called next.
+Create an event, watch the crowd build, decide to go — a live crowd meter for pregames, parties, gym pickup, and anything else where "will people actually show up" is the real question.
 
 ## The problem
 
-Students who play pickup at the school gym can't tell who's already there or whose turn is next. People show up and hope for the best, and "I had next" gets settled by memory and arguing.
+This started as a tool for a specific problem: pickup basketball players at the school gym couldn't tell if a game was happening before showing up, or who'd actually called next. Real interviews backed that up.
 
-## What it does
+The same problem shows up anywhere a host wants people to come but nobody can tell if it's worth going yet — a pregame, a party promoted to people you don't know, a bar on a random night. You either show up and hope, or skip it and miss out.
 
-- **Crowd meter**: check how busy the gym is before you head over.
-- **Next-up queue**: check in for next so there's an actual record of the order.
+**Note:** the wider use case beyond basketball is the direction this product is heading, not something tested with real users yet. The original concept brief (`docs/01-concept-brief.md`) was written for the basketball-only version — the PRD (`docs/02-prd.md`) reflects where the product stands now.
+
+## What it does (v1)
+
+- **Create an event** — for anything: a pregame, a party, a pickup run, whatever
+- **Invite & share** — including people you don't personally know, for wider promotion
+- **Check in** — the live crowd count rises as people arrive, giving the next person a reason to come
+- **Browse / discover** — see events and how busy they're getting before deciding to go
+- **Optional queue** — hosts can turn on an ordered check-in for events that need a turn-taking system (carried over from the pickup basketball "who's next" problem)
+
+## Out of scope for v1
+
+- Photos/comments feed during an event
+- "Vibe" tags on check-in
+- Milestone alerts
+- Fake check-in prevention
+- Invite-source tracking
+
+Good ideas, deliberately cut so the MVP stays buildable on the class timeline.
 
 ## Roadmap / status
 
-- [x] Concept brief ([docs/01-concept-brief.md](docs/01-concept-brief.md))
+- [x] Concept brief (`docs/01-concept-brief.md`)
+- [ ] PRD (`docs/02-prd.md`)
 - [ ] Pick a tech stack
-- [ ] Test the biggest unknown: will players actually check in on the tablet/app instead of calling next out loud?
-- [ ] Build the next-up queue
-- [ ] Build the crowd meter
+- [ ] Test the biggest unknown: will people actually check in instead of just showing up (or not) unannounced?
+- [ ] Build check-in + live crowd meter
+- [ ] Build browse/discover
+- [ ] Build the optional queue toggle
 
 ## Development
 
@@ -26,4 +45,3 @@ The tech stack isn't decided yet. Setup and run instructions will go here once t
 ## Author
 
 Justin Martinez, Syracuse University
-<!-- TODO: add course name/number and semester -->
