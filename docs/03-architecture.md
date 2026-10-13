@@ -1,43 +1,60 @@
-# CrowdCall Architecture Map (MVP)
+# CrowdCall: Technical Architecture (MVP)
 
-Example story traced: An attendee checks in to an event.
+## Overview
+CrowdCall is a web app where hosts create events and guests check in without an account, so everyone can see how busy an event is. This document covers the first version only. Anything listed as out of scope in the PRD (section 6) is left out.
 
-## Pieces and what each one serves
+Architecture map: see docs/design/architecture-map.md
+Stack decision: see docs/decisions/001-stack.md
 
-1. Web app in the browser (screens)
-   Serves: create event, share link, check in, live crowd count, browse events.
-   Attendees use it with no login.
+## Questions the PRD left for this document
+- Web app or mobile app: a web app, so guests only need a link and no install.
+- Polling or push: push, using Supabase Realtime.
+- Hosting and database: Supabase (see docs/decisions/001-stack.md). The website host is still to be chosen.
+- Simultaneous check-ins: the database saves each check-in, so two people tapping at the same time are both counted. The one-check-in-per-device rule is checked in the database, not only in the browser.
 
-2. Host login (Supabase Auth)
-   Serves: "Hosts need a lightweight account to create and manage events."
+## Stack
+- Browser web app: the screens guests and hosts use on their phones
+- Supabase Postgres: database for events and check-ins
+- Supabase Auth: host login
+- Supabase Realtime: live crowd count
+- Website host: not yet chosen (Supabase is a back end only)
 
-3. Database (Supabase Postgres)
-   Serves: storing events (name, time, description, end time, open/closed)
-   and check-ins. Also serves "one check-in per device per event."
+## Components and the requirements they serve
+| Component | What it does | Serves |
+|---|---|---|
+| Browser web app | Screens to create events, share a link, check in, see the count, browse | US-1 to US-5 |
+| Supabase Auth | Host sign-up and login, so only the host can edit or close an event | US-3 |
+| Supabase Postgres (events) | Saves name, time, optional end time, description, public or private setting | US-3, US-4, US-5 |
+| Supabase Postgres (check-ins) | Saves each check-in tied to an event; closed events refuse new ones | US-1, US-3 |
+| Supabase Postgres (queue list) | Optional, host-toggled ordered check-in list with timestamps. Off by default. | US-6 (stretch) |
+| Supabase Realtime | Pushes the new count to everyone viewing the event | US-2 |
+| Device ID in the browser | Weak guard for one check-in per device per event | US-1 |
+| Website host (TBD) | Gives a public web address that opens on a phone with no install | All |
 
-4. Live updates (Supabase Realtime)
-   Serves: the live crowd count rising as people check in.
+Rules I write in my own code on any platform:
+- Counting check-ins and showing an approximate level (US-1, US-2)
+- Ending events when the host closes them or the end time passes (US-3, US-5)
+- Sorting the browse list by crowd size, with a "nothing happening right now" message when it is empty (US-5)
+- Events with no end time stay open until the host closes them
 
-5. Device ID saved in the browser
-   Serves: fraud handling for v1 (one check-in per device per event).
-
-6. Web hosting (to be decided)
-   Serves: giving attendees a link they can open on their phone.
-
-7. Optional queue table in the database
-   Serves: the host-toggleable queue feature.
-
-## Trace: attendee checks in
-
-1. Attendee opens the event link on their phone (browser loads the web app).
-2. Web app reads the event from the database and shows the current count.
-3. Attendee taps "Check in."
-4. Web app sends the check-in with the device ID to the database.
-5. Database checks: is the event open, and has this device already checked in?
-6. If OK, the check-in is saved and the count goes up by one.
+## Trace: a guest checks in
+1. Guest opens the event link on their phone.
+2. The web app reads the event and current count from the database.
+3. Guest taps "Check in."
+4. The web app sends the check-in and device ID to the database.
+5. The database checks that the event is open and this device has not already checked in.
+6. If it passes, the check-in is saved and the count goes up by one.
 7. Realtime sends the new count to everyone viewing the event.
-8. The attendee's screen updates, and so does everyone else's.
+8. Every screen updates without a refresh.
 
-## Not in the map (out of scope for v1)
+## What this choice costs
+- I need a separate place to host the website, which adds a setup step.
+- Supabase Realtime is newer than Firebase's live updates, and its free plan limits how many people can watch at once.
+- "One check-in per device" is a weak guard. Clearing the browser or using another browser gets around it. I am accepting this for v1 (see PRD section 7, fake or inflated counts).
+
+## Out of scope for v1
 - Location lock and host codes (full fraud prevention)
-- Anything in the Won't column of the PRD
+- Everything else listed in PRD section 6
+
+## Open questions
+- Where to host the website

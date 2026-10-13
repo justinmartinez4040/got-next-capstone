@@ -36,7 +36,7 @@ CrowdCall is an event check-in and live crowd count tool. A host creates an even
 
 **MVP feature set:**
 
-- **Create an event** — name, time, optional description, optional end time. No approval flow — anyone with a link can view it.
+- **Create an event** — name, time, optional description, optional end time, and a public or private setting. Public events appear in the browse list. Private events do not appear in the browse list and can only be reached by their link. Anyone with a link can view the event; no approval flow.
 - **Invite / share** — a shareable link, no login required to view.
 - **Check in** — one tap, adds the person to the live count. Limited to one check-in per device per event.
 - **Live crowd meter** — a number (or simple bar) that updates as people check in.
@@ -67,6 +67,7 @@ As a host, I want to create an event and edit or close it later, so that I can k
 - Given I leave the name blank, when I try to submit, then I'm blocked with a clear message — no event is created with an empty name.
 - Given an event I created, when I edit its name, time, or description, then the change is reflected immediately on the shared link.
 - Given an event I created, when I manually close it, then it no longer accepts new check-ins and shows as ended.
+- Given I create an event, when I choose public or private, then public events appear in the browse list and private events are reachable only by their link.
 
 **US-4 — Share an event with people I don't know**
 As a host, I want to share my event via a link that works for anyone, so that I'm not limited to people already in the app or in my contacts.
