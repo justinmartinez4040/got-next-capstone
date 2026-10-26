@@ -10,6 +10,9 @@ export default defineConfig({
   reporter: 'list',
   use: {
     baseURL: 'http://localhost:5173',
+    // Fixed so expected time text is the same on every machine.
+    timezoneId: 'America/New_York',
+    locale: 'en-US',
   },
   webServer: {
     command: 'npm run dev',

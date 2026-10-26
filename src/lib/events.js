@@ -17,12 +17,18 @@ export async function listEvents() {
   const { data, error } = await supabase
     .from('events_with_counts')
     .select('*')
+    .order('crowd_count', { ascending: false })
     .order('created_at', { ascending: false })
   if (error) throw error
   return data
 }
 
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+// Returns the event, or null if it doesn't exist (or the id can't be one).
 export async function getEvent(id) {
+  // Postgres rejects non-uuid ids with an error, so treat them as not found.
+  if (!UUID_PATTERN.test(id)) return null
   const { data, error } = await supabase
     .from('events_with_counts')
     .select('*')
