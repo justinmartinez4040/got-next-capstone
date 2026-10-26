@@ -1,0 +1,16 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies and build output
+node_modules/
+dist/
+
+# Playwright output
+test-results/
+playwright-report/
+playwright/.cache/
+
+# OS
+.DS_Store
