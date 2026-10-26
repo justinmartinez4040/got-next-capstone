@@ -9,3 +9,11 @@ export function formatEventTime(iso) {
     minute: '2-digit',
   })
 }
+
+// Turns a stored timestamp into the "YYYY-MM-DDTHH:mm" local value a
+// datetime-local input expects.
+export function toLocalInputValue(iso) {
+  const d = new Date(iso)
+  const pad = (n) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+}

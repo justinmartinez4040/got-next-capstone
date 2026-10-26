@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getEvent } from '../lib/events.js'
 import { formatEventTime } from '../lib/format.js'
+import NotFound from './NotFound.jsx'
 
 export default function EventPage() {
   const { id } = useParams()
@@ -22,15 +23,7 @@ export default function EventPage() {
 
   if (error) return <p className="error" role="alert">Couldn't load the event: {error}</p>
   if (event === undefined) return <p>Loading…</p>
-  if (event === null) {
-    return (
-      <section>
-        <h1>Event not found</h1>
-        <p>This event doesn't exist or was deleted.</p>
-        <p><Link to="/">Browse events</Link></p>
-      </section>
-    )
-  }
+  if (event === null) return <NotFound />
 
   const shareUrl = `${window.location.origin}/e/${event.id}`
 
@@ -53,6 +46,7 @@ export default function EventPage() {
         <input aria-label="Shareable link" data-testid="share-link" value={shareUrl} readOnly />
         <button type="button" onClick={copyLink}>{copied ? 'Copied' : 'Copy link'}</button>
       </div>
+      <p><Link to={`/e/${event.id}/edit`} className="button">Edit</Link></p>
     </section>
   )
 }
