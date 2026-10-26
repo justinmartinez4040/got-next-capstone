@@ -40,6 +40,15 @@ export async function updateEvent(id, changes) {
   return data.length > 0
 }
 
+// Deletes the event row. The database cascade (check_ins.event_id
+// on delete cascade) removes all of its check-ins in the same statement.
+// Returns false if no event has this id (e.g. already deleted).
+export async function deleteEvent(id) {
+  const { data, error } = await supabase.from('events').delete().eq('id', id).select('id')
+  if (error) throw error
+  return data.length > 0
+}
+
 // Returns the event, or null if it doesn't exist (or the id can't be one).
 export async function getEvent(id) {
   // Postgres rejects non-uuid ids with an error, so treat them as not found.
